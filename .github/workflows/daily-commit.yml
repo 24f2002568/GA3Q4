@@ -2,41 +2,27 @@ name: Daily Automated Commit
 
 on:
   schedule:
-    # Runs at 9:00 AM UTC every day
-    - cron: '0 9 * * *'
-  workflow_dispatch:  # Allows manual triggering
+    - cron: '*/5 * * * *'   # every 5 minutes (TEMPORARY)
 
 jobs:
   daily-commit:
     runs-on: ubuntu-latest
-    
+
     permissions:
-      contents: write  # Needed to push commits
-    
+      contents: write
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      
+
       - name: Configure Git with email 24f2002568@ds.study.iitm.ac.in
         run: |
-          git config --global user.name "GitHub Actions Bot"
-          git config --global user.email "24f2002568@ds.study.iitm.ac.in"
-      
-      - name: Create daily update file
+          git config user.name "github-actions"
+          git config user.email "24f2002568@ds.study.iitm.ac.in"
+
+      - name: Daily commit step 24f2002568@ds.study.iitm.ac.in
         run: |
-          # Create or update a daily log file
-          echo "Daily automated commit - $(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> daily-updates.log
-          
-          # Optional: Create a timestamp file
-          echo "$(date -u)" > last-update.txt
-      
-      - name: Commit changes
-        run: |
-          git add daily-updates.log last-update.txt
-          # Only commit if there are changes
-          if git diff --staged --quiet; then
-            echo "No changes to commit"
-          else
-            git commit -m "Daily automated update - $(date -u '+%Y-%m-%d')"
-            git push
-          fi
+          echo "Run at $(date)" >> daily-updates.log
+          git add daily-updates.log
+          git commit -m "Daily automated commit"
+          git push
